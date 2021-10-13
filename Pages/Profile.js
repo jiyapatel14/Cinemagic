@@ -7,7 +7,6 @@ import {
   ImageBackground,
   TextInput,
   StyleSheet,
-  Button,
 } from 'react-native';
 
 import {useTheme} from 'react-native-paper';
@@ -18,7 +17,6 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-crop-picker';
-import { useValidation } from 'react-native-form-validator';
 import DatePicker from 'react-native-datepicker';
 
 const Profile = () => {
@@ -175,7 +173,7 @@ const handleValidName = (val) => {
   return (
     <>
     <View style={styles.container}>
-       <StatusBar backgroundColor='#FFDAB9' barStyle="dark-content"/>
+       <StatusBar backgroundColor='#000000' barStyle="light-content"/>
       <BottomSheet
         ref={this.bs}
         snapPoints={[330, 0]}

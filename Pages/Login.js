@@ -118,7 +118,7 @@ export default function Login({navigation}) {
             return;
         }
         else {
-            navigation.navigate('Profile')
+            navigation.navigate('MainTab', { screen: 'Profile' })
             }
         Login();
     
@@ -213,7 +213,8 @@ export default function Login({navigation}) {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.login}
-                    onPress={() => {loginHandle( data.username, data.password )}}
+                    onPress={() =>  navigation.navigate('MainTab')}
+                    // onPress={() => {loginHandle( data.username, data.password )}}
                 >
                 <LinearGradient
                     colors={['#FFDAB9', '#FFDAB9']}

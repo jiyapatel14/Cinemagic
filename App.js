@@ -1,16 +1,29 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import Welcome from './Pages/Welcome';
 import Login from './Pages/Login';
 import SignUp from './Pages/SingUp';
-import Profile from './Pages/Profile';
+import MainTab from './Pages/MainTab';
+import TopTab from './Pages/TopTab';
+import MovieDetails from './Pages/MovieDetails';
+
+//import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createStackNavigator();
+//const Drawer = createDrawerNavigator();
 
 export default function App() {
   return(
+  // <NavigationContainer>
+  //   <Stack.Navigator>
+  //       <Stack.Screen name="MainTab" component={MainTab} />
+  //       <Stack.Screen name="MovieDetails" component={MovieDetails} />
+  //     </Stack.Navigator>
+  // </NavigationContainer>
+    
    <NavigationContainer>
      <Stack.Navigator initialRouteName='Welcome'> 
      <Stack.Screen name='Welcome' component={Welcome} 
@@ -28,15 +41,14 @@ export default function App() {
         headerShown: false,
       }}
      />
-     <Stack.Screen name='Profile' component={Profile}
+     <Stack.Screen name="MainTab" component={MainTab}
       options={{
-        title: 'Profile Details:',
-        headerTitleStyle: {alignSelf:'center'},
-        headerLeft: null, 
-        headerStyle: {
-          backgroundColor: '#000000',
-        },
-        headerTintColor: '#fff',
+        headerShown: false,
+      }}
+     />
+     <Stack.Screen name="MovieDetails" component={MovieDetails} 
+      options={{
+        headerShown: false,
       }}
      />
      </Stack.Navigator>
