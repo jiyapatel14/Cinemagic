@@ -8,10 +8,26 @@ import {
   TouchableOpacity
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 export default function MovieDetails({route}) {
+
     const imagepath= route.params.paramImage
-    const [liked, setLiked] = useState(false)
+    const [liked, setLiked] = useState(false);
+    const dbRef=firestore().collection('users');
+    
+    const addToFavourites = async() => {
+      await dbRef
+      .add({
+        email:auth().currentUser.email,
+        favourites: route.params.paramName,
+        poster: route.params.paramImage,
+      })
+      alert('Added to Favourites');
+    }
+
     return (
         <>
         <StatusBar backgroundColor='#000000' barStyle="light-content"/>
@@ -34,12 +50,12 @@ export default function MovieDetails({route}) {
         <Text style={styles.text}>
          {route.params.paramView}
         </Text> 
-        <View style={{paddingTop:20}}>       
-        {/* <AntDesign  name={liked?"heart":"hearto"} size={40} color="#ffffff" 
-            onPress={()=>{
-                setLiked(!liked)
-            }}          
-        /> */}
+        <View style={{paddingTop:20}}>     
+        <TouchableOpacity style={styles.commandButton}  onPress={() => {addToFavourites(); setLiked(!liked) }} >
+        <AntDesign  name={liked?"heart":"hearto"} size={40} color="#ffffff" /> 
+          <Text style={styles.panelButtonTitle} >Add to favourites</Text>
+        </TouchableOpacity>
+       
         </View>
       </View>
       </>
@@ -62,6 +78,18 @@ export default function MovieDetails({route}) {
         width: 200,
         height: 250,
         paddingTop: 50
+      },
+      panelButtonTitle: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        color:"#fff",
+      },
+      commandButton: {
+        padding: 15,
+        borderRadius: 10,
+        backgroundColor: '#000000',
+        alignItems: 'center',
+        marginTop: 10,
       },
   });
   

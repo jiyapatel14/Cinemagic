@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import { 
     View, 
     Text, 
@@ -7,11 +7,16 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
-    StatusBar
+    StatusBar,
+    Authentication,
+    Button,
+    ActivityIndicator,
 } from 'react-native';
 
 import MainTab from './MainTab';
-
+import auth from '@react-native-firebase/auth';
+import { AuthContext } from '../navigation/AuthProvider';
+import SocialButton from '../components/SocialButton';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -20,6 +25,11 @@ import Feather from 'react-native-vector-icons/Feather';
 
 export default function SignUp({navigation}) {
 
+    const {register, googleLogin} = useContext(AuthContext);
+
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+  
     const [data, setData] = React.useState({
         username: '',
         password: '',
@@ -100,9 +110,8 @@ export default function SignUp({navigation}) {
         }
     }
     
-
     return (
-      <View style={styles.container}>
+        <View style={styles.container}>
           <StatusBar backgroundColor='#FFDAB9' barStyle="dark-content"/>
         <View style={styles.header}>
             <Text style={styles.text_header}>Register Now!</Text>
@@ -125,7 +134,8 @@ export default function SignUp({navigation}) {
                     keyboardType="email-address"
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => handleEmailChange(val)}
+                    labelValue={email}
+                    onChangeText={(userEmail) => setEmail(userEmail)}
             />
 
         </View>
@@ -182,7 +192,8 @@ export default function SignUp({navigation}) {
                     secureTextEntry={data.secureTextEntry ? true : false}
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => handlePasswordChange(val)}
+                    labelValue={password}
+                    onChangeText={(userPassword) => setPassword(userPassword)}
                 />
                 <TouchableOpacity
                     onPress={updateSecureTextEntry}
@@ -219,7 +230,8 @@ export default function SignUp({navigation}) {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => navigation.navigate('MainTab')}
+                    onPress={() => register(email, password)}
+                    // onPress={() => navigation.navigate('MainTab')}
                 >
                 <LinearGradient
                     colors={['#FFDAB9', '#FFDAB9']}
@@ -231,10 +243,18 @@ export default function SignUp({navigation}) {
                 </LinearGradient>
                 </TouchableOpacity>
 
+                <SocialButton 
+                    buttonTitle="Sign Up with Google"
+                    btnType="google"
+                    color="#de4d41"
+                    backgroundColor="#FFDAB9"
+                    onPress={() => googleLogin()}
+                />
+                
                 <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.navigate('Login')}
                     style={[styles.signIn, {
-                        borderColor: '#FFDAB9',
+                        borderColor: '#000000',
                         borderWidth: 1,
                         marginTop: 15
                     }]}
@@ -294,14 +314,14 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 30,
     },
     signIn: {
         width: '100%',
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 10,
     },
     textSign: {
         fontSize: 18,
@@ -319,4 +339,14 @@ const styles = StyleSheet.create({
         color: '#FA8072',
         fontSize: 14,
     },
+    errorLabelContainerStyle: {
+        flex: 0.1,
+        alignItems: "center",
+        justifyContent: "center"
+      },
+
+      errorTextStyle: {
+        color: "red",
+        textAlign: "center"
+      },
   });

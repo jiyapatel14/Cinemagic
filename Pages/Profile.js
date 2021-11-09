@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -19,8 +19,11 @@ import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-crop-picker';
 import DatePicker from 'react-native-datepicker';
 
+import { AuthContext } from '../navigation/AuthProvider';
+
 const Profile = () => {
 
+  const {logout} = useContext(AuthContext);
   const [image, setImage] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
 
   const takePhotoFromCamera = () => {
@@ -322,6 +325,9 @@ const handleValidName = (val) => {
           <Text style={styles.panelButtonTitle}>Submit</Text>
         </TouchableOpacity>
         {/* <Text>{getErrorMessages()}</Text> */}
+        <TouchableOpacity style={styles.commandButton} onPress={() => logout()} >
+          <Text style={styles.panelButtonTitle}>Logout</Text>
+        </TouchableOpacity>
       </Animated.View>
     </View>
     </>
@@ -414,5 +420,16 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: '#FA8072',
     fontSize: 14,
+},
+signOut: {
+  width: '100%',
+  height: 50,
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 10
+},
+textSign: {
+  fontSize: 18,
+  fontWeight: 'bold'
 },
 });

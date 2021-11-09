@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "323884164961",
+    "project_id": "cinemagic-1201b",
+    "storage_bucket": "cinemagic-1201b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323884164961:android:945dc405b775c57a33c720",
+        "android_client_info": {
+          "package_name": "com.cinemagic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323884164961-ouhngkvbmlk4ogkfmla623d2au3js7om.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cinemagic",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "323884164961-ciarg3acahp1tls21nlkam13h3l1ul3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW-36vzOE0pdqsIsP3RYzJxsF0CPo7zvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323884164961-ciarg3acahp1tls21nlkam13h3l1ul3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

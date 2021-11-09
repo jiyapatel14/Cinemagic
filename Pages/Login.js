@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import { 
     View, 
     Text, 
@@ -8,70 +8,34 @@ import {
     StyleSheet ,
     StatusBar,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import firestore from '@react-native-firebase/firestore';
+import { AuthContext } from '../navigation/AuthProvider';
+import SocialButton from '../components/SocialButton';
 
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-
-import { useTheme } from 'react-native-paper';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default function Login({navigation}) {
+    
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const {login, googleLogin} = useContext(AuthContext);
 
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry: true,
-        isValidUser: true,
+        isValidEmail: true,
         isValidPassword: true,
     });
-
-    // const Users = [
-    //     {
-    //         id: 1, 
-    //         email: 'user1@email.com',
-    //         username: 'user1', 
-    //         password: 'password', 
-    //         userToken: 'token123'
-    //     },
-    //     {
-    //         id: 2, 
-    //         email: 'user2@email.com',
-    //         username: 'user2', 
-    //         password: 'pass1234', 
-    //         userToken: 'token12345'
-    //     },
-    //     {
-    //         id: 3, 
-    //         email: 'testuser@email.com',
-    //         username: 'testuser', 
-    //         password: 'testpass', 
-    //         userToken: 'testtoken'
-    //     },
-    // ];
-
-    const { colors } = useTheme();
-
-    const textInputChange = (val) => {
-        if( val.trim().length >= 4 ) {
-            setData({
-                ...data,
-                username: val,
-                check_textInputChange: true,
-                isValidUser: true
-            });
-        } else {
-            setData({
-                ...data,
-                username: val,
-                check_textInputChange: false,
-                isValidUser: false
-            });
-        }
-    }
-
+ 
     const handlePasswordChange = (val) => {
         if( val.trim().length >= 8 ) {
             setData({
@@ -95,36 +59,24 @@ export default function Login({navigation}) {
         });
     }
 
-    const handleValidUser = (val) => {
-        if( val.trim().length >= 4 ) {
+    const handleEmailChange = (val) => {
+        if( val.trim().length >= 8 ) {
             setData({
                 ...data,
-                isValidUser: true
+                email: val,
+                isValidEmail: true
             });
         } else {
             setData({
                 ...data,
-                isValidUser: false
+                email: val,
+                isValidEmail: false
             });
         }
     }
 
-    const loginHandle = (userName, password) => {
-
-        if ( data.username.length == 0 || data.password.length == 0 ) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                {text: 'Okay'}
-            ]);
-            return;
-        }
-        else {
-            navigation.navigate('MainTab', { screen: 'Profile' })
-            }
-        Login();
-    
-    }
     return (
-      <View style={styles.container}>
+        <View style={styles.container}>
           <StatusBar backgroundColor='#FFDAB9' barStyle="dark-content"/>
         <View style={styles.header}>
             <Text style={styles.text_header}>Welcome!</Text>
@@ -133,39 +85,28 @@ export default function Login({navigation}) {
             animation="fadeInUpBig"
             style={styles.footer}
         >
-            <Text style={styles.text_footer}>Username</Text>
+            <Text style={styles.text_footer}>Email ID</Text>
             <View style={styles.action}>
-                <FontAwesome 
-                    name="user-o"
+                <MaterialIcons 
+                    name="email"
                     color="#666666"
                     size={20}
                 />
-                <TextInput 
-                    placeholder="Your Username"
-                    placeholderTextColor="#666666"
+                <TextInput
+                    placeholder="Your email address"
+                    keyboardType="email-address"
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => textInputChange(val)}
-                    onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
-                />
-                {data.check_textInputChange ? 
-                <Animatable.View
-                    animation="bounceIn"
-                >
-                    <Feather 
-                        name="check-circle"
-                        color="#FFDAB9"
-                        size={20}
-                    />
-                </Animatable.View>
-                : null}
-            </View>
-            { data.isValidUser ? null : 
-            <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
-            </Animatable.View>
-            }
-            
+                    labelValue={email}
+                    onChangeText={(userEmail) => setEmail(userEmail)}
+            />
+
+        </View>
+        { data.isValidEmail ? null : 
+        <Animatable.View animation="fadeInLeft" duration={500}>
+        <Text style={styles.errorMsg}>Email must be 8 characters long.</Text>
+        </Animatable.View>
+        }
 
             <Text style={styles.text_footer}>Password</Text>
             <View style={styles.action}>
@@ -180,7 +121,8 @@ export default function Login({navigation}) {
                     secureTextEntry={data.secureTextEntry ? true : false}
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => handlePasswordChange(val)}
+                    labelValue={password}
+                    onChangeText={(userPassword) => setPassword(userPassword) }
                 />
                 <TouchableOpacity
                     onPress={updateSecureTextEntry}
@@ -213,8 +155,7 @@ export default function Login({navigation}) {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.login}
-                    onPress={() =>  navigation.navigate('MainTab')}
-                    // onPress={() => {loginHandle( data.username, data.password )}}
+                    onPress={() =>  login(email, password)}
                 >
                 <LinearGradient
                     colors={['#FFDAB9', '#FFDAB9']}
@@ -225,14 +166,21 @@ export default function Login({navigation}) {
                     }]}>Login</Text>
                 </LinearGradient>
                 </TouchableOpacity>
-                
+     
+                <SocialButton 
+                    buttonTitle="Sign In with Google"
+                    btnType="google"
+                    color="#de4d41"
+                    backgroundColor="#FFDAB9"
+                    onPress={() => googleLogin()}
+                />
+
                 <TouchableOpacity
                     onPress={() => navigation.navigate('SignUp')}
                     style={[styles.login, {
-                        borderColor: '#FFDAB9',
+                        borderColor: '#000000',
                         borderWidth: 1,
                         marginTop: 15,
-                    
                     }]}
                 >
                     <Text style={[styles.textSign, {
@@ -312,5 +260,15 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
-    }
+    },
+    errorLabelContainerStyle: {
+        flex: 0.1,
+        alignItems: "center",
+        justifyContent: "center"
+      },
+
+      errorTextStyle: {
+        color: "red",
+        textAlign: "center"
+      },
   });
