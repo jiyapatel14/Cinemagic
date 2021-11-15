@@ -30,7 +30,7 @@ export default function Favourite() {
         <View style={{ flex: 1, padding: 24, backgroundColor:"black" }}>
 
           <FlatList
-            data={users}
+            data={movies}
             keyExtractor={item=>item.key}
             renderItem={({ item }) => (
               
@@ -44,15 +44,15 @@ export default function Favourite() {
               //   })
               //   }>
               <View style={styles.container}>
-
-                {/* <Image
+                <Text>
+                <Image
                   style={styles.logo}
                   source={{
                       uri:'https://image.tmdb.org/t/p/original/'+item.poster,
                   }}
-                /> */}
+                />
                 <Text style={styles.text}>  {item.favourites}  </Text>
-        
+                </Text>
 
               </View>
               // </TouchableOpacity>
